@@ -61,7 +61,7 @@ export const mockJournalEntry1: JournalEntry[] = [
     id: 3,
     journeyId: 2,
     date: new Date("2025-02-02"),
-    title: "Day 2 in Thailand, finding a beautiful campsite",
+    title: "Day 3 in Thailand, finding a beautiful campsite",
     text: "A campsite with many happy locals and a swimming pool, what more could we want. And all for £4",
     latitude: 14.76941,
     longitude: 100.385388,
