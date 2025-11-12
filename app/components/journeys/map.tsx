@@ -1,7 +1,14 @@
 "use client";
-import { MapContainer, TileLayer, useMap, Popup, Marker } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Popup,
+  Marker,
+  Polyline,
+} from "react-leaflet";
 import L from "leaflet";
-import { Journey, JournalEntry } from "./list-of-journeys";
+import React from "react";
+import { Route } from "./list-of-journeys";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -12,30 +19,39 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
-  journeys: Journey[];
-  journalEntries: JournalEntry[];
+  routes: Route[];
 }
 
-export default function Map({ journeys, journalEntries }: MapProps) {
+const defaultCenter: [number, number] = [51.5083, -0.128108];
+export default function Map({ routes }: MapProps) {
   return (
     <MapContainer
-      center={[journalEntries[0].latitude, journalEntries[0].longitude]}
+      center={
+        routes && routes[0].markers.length > 0
+          ? routes[0].markers[0]
+          : defaultCenter
+      }
       zoom={13}
       scrollWheelZoom={true}
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
-      {journalEntries.map((entry: JournalEntry) => {
-        return (
-          <Marker
-            key={entry.id}
-            position={[entry.latitude, entry.longitude]}
-          ></Marker>
-        );
-      })}
+
+      <React.Fragment></React.Fragment>
+      {routes.map((route) => (
+        <React.Fragment key={route.journeyId}>
+          <Polyline positions={route.markers} color={route.colour} />
+
+          {route.markers.map((position, idx) => (
+            <Marker position={position} key={idx}>
+              <Popup>Journey {route.title[idx]}</Popup>
+            </Marker>
+          ))}
+        </React.Fragment>
+      ))}
     </MapContainer>
   );
 }
