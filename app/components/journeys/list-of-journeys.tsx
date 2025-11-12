@@ -1,4 +1,4 @@
-interface Journey {
+export interface Journey {
   id: number;
   userId: number;
   title: string;
@@ -8,7 +8,7 @@ interface Journey {
   colour?: string;
 }
 
-interface JournalEntry {
+export interface JournalEntry {
   id: number;
   journeyId: number;
   date: Date;

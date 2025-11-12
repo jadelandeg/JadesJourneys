@@ -1,7 +1,7 @@
 "use client";
 import { MapContainer, TileLayer, useMap, Popup, Marker } from "react-leaflet";
 import L from "leaflet";
-import { mockJourneys, mockJournalEntry1 } from "./list-of-journeys";
+import { Journey, JournalEntry } from "./list-of-journeys";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -11,10 +11,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function Map() {
+interface MapProps {
+  journeys: Journey[];
+  journalEntries: JournalEntry[];
+}
+
+export default function Map({ journeys, journalEntries }: MapProps) {
   return (
     <MapContainer
-      center={[51.505, -0.09]}
+      center={[journalEntries[0].latitude, journalEntries[0].longitude]}
       zoom={13}
       scrollWheelZoom={true}
       style={{ height: "100%", width: "100%" }}
@@ -23,7 +28,14 @@ export default function Map() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[51.505, -0.09]}></Marker>
+      {journalEntries.map((entry: JournalEntry) => {
+        return (
+          <Marker
+            key={entry.id}
+            position={[entry.latitude, entry.longitude]}
+          ></Marker>
+        );
+      })}
     </MapContainer>
   );
 }
